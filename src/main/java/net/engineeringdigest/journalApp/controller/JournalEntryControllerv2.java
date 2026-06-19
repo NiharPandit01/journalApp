@@ -40,6 +40,7 @@ public class JournalEntryControllerv2 {
     @PostMapping
     public ResponseEntity<JournalEntry> createEntry(@RequestBody JournalEntry myEntry) {
         //localhost:8080/journal post
+        System.out.println("Received sentiment = " + myEntry.getSentiment());
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String userName = authentication.getName();
