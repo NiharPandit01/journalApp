@@ -30,4 +30,4 @@ This is a Spring Boot backend project that provides REST APIs for a journal appl
 ## ▶️ How to Run
 1. Clone the repository
 ```bash
-git clone https://github.com/your-username/journal-app.git
+git clone https://github.com/NiharPandit01/journal-app.git
