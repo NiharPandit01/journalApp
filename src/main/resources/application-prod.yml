@@ -1,5 +1,7 @@
 
 spring:
+  redis:
+    uri: redis://default:XlTc4gMX90LMIEOj32w0aUdOrIbXvHIa@amicable-chicken-bluebell-77802.db.redis.io:19871
   data:
     mongodb:
       uri:  mongodb+srv://panditnihar919_db_user:XhkXLLMARpyNa1J9@cluster0.o8ylzga.mongodb.net/?appName=Cluster0
