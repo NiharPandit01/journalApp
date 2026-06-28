@@ -24,27 +24,21 @@ public class UserService {
 
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-   // private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+   private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     public boolean saveNewUser(User user) {
-        try{
-//            user.setPassword(passwordEncoder.encode(user.getPassword()));
-//            user.setRoles(Arrays.asList("USER"));
-//
-//            userRepository.save(user);
-            user = null; // Forces a NullPointerException on the next line
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            return true;
-        }catch(Exception e){
-            log.error("Error occured",e);
-            log.info("hahahaha");
-            log.warn("hahahaha");
-            log.error("hahahaha");
-            log.debug("hahahaha");
-            log.trace("hahahaha");
-            return false;
+
+            try {
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
+                user.setRoles(Arrays.asList("USER"));
+                userRepository.save(user);
+                return true;
+            } catch (Exception e) {
+                log.error("Error occurred while saving new user", e);
+                return false;
+            }
         }
-    } // <--- Added this brace to close saveNewUser
+
 
     public void saveAdmin(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));

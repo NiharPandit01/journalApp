@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class EmailServiceTests {
 @Autowired
 private EmailService emailService;
-@Disabled
+
 @Test
 void testSendMail(){
     emailService.sendEmail("vikram96253@gmail.com","testing java mail sender","hii ap kaise hein?");

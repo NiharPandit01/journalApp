@@ -11,17 +11,24 @@ import java.util.List;
 
 @Component
 public class UserRepositoryimpl {
+
     @Autowired
     private MongoTemplate mongoTemplate;
-     public List<User>getUserForSA(){
-         Query query = new Query();
-       query.addCriteria(Criteria.where("email").exists(true));
-         query.addCriteria(Criteria.where("sentimentAnalysis").is(true));query.addCriteria(Criteria.where("email").ne(null).ne(""));
-         query.addCriteria(Criteria.where("email").regex("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$"));
-         Criteria.where("email").exists(true).ne(null);
 
+    public List<User> getUserForSA() {
 
-         List<User> users=  mongoTemplate.find(query,User.class);
-         return users;
-     }
+        Query query = new Query();
+
+        query.addCriteria(new Criteria().andOperator(
+                Criteria.where("email").exists(true),
+                Criteria.where("email").ne(null),
+                Criteria.where("email").ne(""),
+                Criteria.where("email").regex("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$"),
+                Criteria.where("sentimentAnalysis").is(true)
+        ));
+
+        System.out.println("Mongo Query: " + query.getQueryObject().toJson());
+
+        return mongoTemplate.find(query, User.class);
+    }
 }
