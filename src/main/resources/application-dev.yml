@@ -1,9 +1,7 @@
-
-
 spring:
   data:
     mongodb:
-      uri: mongodb+srv://panditnihar919_db_user:XhkXLLMARpyNa1J9@cluster0.o8ylzga.mongodb.net/?appName=Cluster0
+      uri: ${MONGO_URI_DEV}
       database: journaldb
       auto-index-creation: true
 
@@ -11,4 +9,3 @@ server:
   port: 8080
   servlet:
     context-path: /journal
-

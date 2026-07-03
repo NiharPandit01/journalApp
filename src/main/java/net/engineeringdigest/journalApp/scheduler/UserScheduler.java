@@ -6,6 +6,7 @@ import net.engineeringdigest.journalApp.entity.User;
 import net.engineeringdigest.journalApp.enums.Sentiment;
 import net.engineeringdigest.journalApp.model.SentimentData;
 import net.engineeringdigest.journalApp.repository.UserRepositoryimpl;
+import net.engineeringdigest.journalApp.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -29,6 +30,8 @@ public class UserScheduler {
 
     @Autowired
     private AppCache appCache;
+    @Autowired
+    private EmailService emailService ;
 
     @Scheduled(cron = "0 0 9 * * Sun")
     public void fetchUsersAndSendSaMail() {
@@ -70,8 +73,7 @@ public class UserScheduler {
                     kafkaTemplate.send("weekly-sentiments", sentimentData.getEmail(), sentimentData).get();
                     System.out.println("Kafka message sent for: " + sentimentData.getEmail());
                 } catch (Exception e) {
-                    System.out.println("Kafka send failed for: " + sentimentData.getEmail());
-                    e.printStackTrace();
+                   emailService.sendEmail(sentimentData.getEmail(),"sentiment for previous week",sentimentData.getSentiment());
                 }
             }
         }
