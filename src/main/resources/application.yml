@@ -15,7 +15,7 @@ spring:
       spring.json.trusted.packages: "net.engineeringdigest.journalApp.model"
       security.protocol: SASL_SSL
       sasl.mechanism: PLAIN
-      sasl.jaas.config: ${KAFKA_JAAS_CONFIG}
+      sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="${KAFKA_USERNAME}" password="${KAFKA_PASSWORD}";
 
   mail:
     host: smtp.gmail.com
