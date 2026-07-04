@@ -1,3 +1,76 @@
+# --- DEFAULT SETTINGS (Shared across all profiles) ---
 spring:
-  profiles:
-    active: ${SPRING_PROFILES_ACTIVE:dev}
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      group-id: weekly-sentiment-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    properties:
+      session.timeout.ms: 45000
+      spring.json.trusted.packages: "net.engineeringdigest.journalApp.model"
+      security.protocol: SASL_SSL
+      sasl.mechanism: PLAIN
+      sasl.jaas.config: ${KAFKA_JAAS_CONFIG}
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+weather:
+  api:
+    key: ${WEATHER_API_KEY}
+
+logging:
+  level:
+    root: INFO
+
+# --- DEVELOPMENT PROFILE ---
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  redis:
+    uri: ${REDIS_URI}
+  data:
+    mongodb:
+      uri: ${MONGO_URI_DEV}
+      database: journaldb
+      auto-index-creation: true
+
+server:
+  port: 8080
+  servlet:
+    context-path: /journal
+
+# --- PRODUCTION PROFILE ---
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  redis:
+    uri: ${REDIS_URI}
+  data:
+    mongodb:
+      uri: ${MONGO_URI_PROD}
+      database: journaldb
+      auto-index-creation: true
+
+server:
+  port: ${PORT:8081}
+  servlet:
+    context-path: /journal
