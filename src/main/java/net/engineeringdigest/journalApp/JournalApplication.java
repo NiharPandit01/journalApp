@@ -13,7 +13,7 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 @EnableTransactionManagement
 @EnableScheduling
-public class JournalApplication {
+public class    JournalApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(JournalApplication.class, args);

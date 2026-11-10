@@ -85,29 +85,27 @@ public class JournalEntryControllerv2 {
 
     }
 
-    @PutMapping("id/{myid}")
-    public ResponseEntity<?> updateJournalById(@PathVariable ObjectId myid,
-                                               @RequestBody JournalEntry newEntry
-    ) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userName = authentication.getName();
-        User user = userService.findByUserName(userName);
-        List<JournalEntry> collect = user.getJournalEntries().stream().filter(x -> x.getId().equals(myid)).collect(Collectors.toList());
-        if (!collect.isEmpty()) {
-            Optional<JournalEntry> journalEntry = JournalEntryService.findById(myid);
-            if (journalEntry.isPresent()) {
-                return new ResponseEntity<>(journalEntry.get(), HttpStatus.OK);
-            }
 
-            JournalEntry old = JournalEntryService.findById(myid).orElse(null);
-            if (old != null) {
-                old.setTitle(newEntry.getTitle() != null && !newEntry.getTitle().equals("") ? newEntry.getTitle() : old.getTitle());
-                old.setContent(newEntry.getContent() != null && !newEntry.getContent().equals("") ? newEntry.getContent() : old.getContent());
-                JournalEntryService.saveEntry(old);
-                return new ResponseEntity<>(old, HttpStatus.OK);
-            }
-            }
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    @PutMapping("id/{myid}")
+    public ResponseEntity<?> updateJournalById(
+            @PathVariable ObjectId myid,
+            @RequestBody JournalEntry newEntry
+    ) {
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        String userName = authentication.getName();
+
+        Optional<JournalEntry> updatedEntry =
+                JournalEntryService.updateEntry(myid, userName, newEntry);
+
+        if (updatedEntry.isPresent()) {
+            return new ResponseEntity<>(
+                    updatedEntry.get(),
+                    HttpStatus.OK
+            );
         }
 
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
     }

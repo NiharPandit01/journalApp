@@ -76,4 +76,50 @@ public class  JournalEntryService {
     public List<JournalEntry> findByUserName(String username){
 return null;
     }
+
+    @Transactional
+    public Optional<JournalEntry> updateEntry(
+            ObjectId id,
+            String userName,
+            JournalEntry updatedEntry
+    ) {
+        User user = userService.findByUserName(userName);
+
+        if (user == null || user.getJournalEntries() == null) {
+            return Optional.empty();
+        }
+
+        Optional<JournalEntry> existingEntry = user.getJournalEntries()
+                .stream()
+                .filter(entry -> entry.getId().equals(id))
+                .findFirst();
+
+        if (!existingEntry.isPresent()) {
+            return Optional.empty();
+        }
+
+        JournalEntry oldEntry = existingEntry.get();
+
+        if (updatedEntry.getTitle() != null &&
+                !updatedEntry.getTitle().trim().isEmpty()) {
+            oldEntry.setTitle(updatedEntry.getTitle().trim());
+        }
+
+        if (updatedEntry.getContent() != null &&
+                !updatedEntry.getContent().trim().isEmpty()) {
+            oldEntry.setContent(updatedEntry.getContent().trim());
+        }
+
+        if (updatedEntry.getSentiment() != null) {
+            oldEntry.setSentiment(updatedEntry.getSentiment());
+        }
+
+        // Update the individual journal document.
+        journalEntryRepository.save(oldEntry);
+
+        // Update the journal entry embedded in the user's document.
+        userService.saveUser(user);
+
+        return Optional.of(oldEntry);
+    }
 }
